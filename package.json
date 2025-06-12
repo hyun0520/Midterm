@@ -1,0 +1,26 @@
+{
+  "name": "comp229-s25-midterm-main",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "npm --prefix server run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyun0520/Midterm.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyun0520/Midterm/issues"
+  },
+  "homepage": "https://github.com/hyun0520/Midterm#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

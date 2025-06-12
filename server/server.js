@@ -49,7 +49,10 @@ let movies = [
   { title: 'Inception', genre: 'Sci-Fi', year: 2010, director: 'Christopher Nolan' },
   { title: 'The Godfather', genre: 'Drama', year: 1972, director: 'Francis Ford Coppola' },
   { title: 'Pulp Fiction', genre: 'Crime', year: 1994, director: 'Quentin Tarantino' },
-  { title: 'The Dark Knight', genre: 'Action', year: 2008, director: 'Christopher Nolan' }
+  { title: 'The Dark Knight', genre: 'Action', year: 2008, director: 'Christopher Nolan' },
+  // Student ID:301000913 add 2 movies from 2000-2009
+  { title: 'Spirited Away', genre: 'Animation', year: 2001, director: 'Hayao Miyazaki' },
+  { title: 'Taegukgi: The Brotherhood of War', genre: 'Action', year: 2004, director: 'Jegyu Kang' }
 ];
 
 // Set the port for the server
@@ -67,14 +70,8 @@ app.get('/', (req, res) => {
 // Task: Implement logic to return the full list of movies
 app.get('/api/movies', (req, res) => {
   // TODO: Add logic to return all movies
-
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
-
-  // Don't forget to remove the line below:
+  res.json(movies);
+  
   res.status(501).send('Not Implemented');
 });
 
@@ -83,15 +80,12 @@ app.get('/api/movies', (req, res) => {
 // Task: Implement logic to return movies matching the specified genre
 app.get('/api/movies/filter', (req, res) => {
   // TODO: Add logic to filter movies by genre
-  
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
+  const genre = req.query.genre;
+  const filterMovies = movies.filter(movie =>
+    movie.genre.toLowerCase() == genre.toLowerCase()
+  );
 
-  // Don't forget to remove the line below:
-  res.status(501).send('Not Implemented');
+  res.json(filterMovies);
 });
 
 // GET /api/movies/:id
@@ -99,14 +93,9 @@ app.get('/api/movies/filter', (req, res) => {
 // Task: Implement logic to return a movie by its index (ID)
 app.get('/api/movies/:id', (req, res) => {
   // TODO: Add logic to return a movie by its index (ID)
-  
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
-
-  // Don't forget to remove the line below:
+  const id = parseInt(req.params.id);
+  const movie = movies[id];
+  res.json(movie);
   res.status(501).send('Not Implemented');
 });
 
@@ -115,14 +104,19 @@ app.get('/api/movies/:id', (req, res) => {
 // Task: Implement logic to add a new movie to the array
 app.post('/api/movies', (req, res) => {
   // TODO: Add logic to add a new movie to the array
+  const newMovie = req.body;
   
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
+  if (!newMovie.title || !newMovie.genre || !newMovie.year || !newMovie.director) {
+    return res.status(400).json({ error: 'Missing required movie fields' });
+  }
 
-  // Don't forget to remove the line below:
+  movies.push(newMovie);
+
+  res.status(201).json({
+    message: 'Movie posted',
+    movie: newMovie,
+    index: movies.length - 1
+  });
   res.status(501).send('Not Implemented');
 });
 
@@ -131,14 +125,23 @@ app.post('/api/movies', (req, res) => {
 // Task: Implement logic to update a movie by its index (ID)
 app.put('/api/movies/:id', (req, res) => {
   // TODO: Add logic to update a movie by its index
-  
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
+  const id = parseInt(req.params.id);
+  const updatedMovie = req.body;
+  // searching movie index number
+  if (isNaN(id) || id < 0 || id >= movies.length) {
+    return res.status(404).json({ error: 'Movie not found' });
+  }
+  if (!updatedMovie.title || !updatedMovie.genre || !updatedMovie.year || !updatedMovie.director) {
+    return res.status(400).json({ error: 'Missing required movie fields' });
+  }
+  movies[id] = updatedMovie;
 
-  // Don't forget to remove the line below:
+  res.json({
+    message: 'Movie updated',
+    movie: movies[id],
+    index: id
+  });
+  
   res.status(501).send('Not Implemented');
 });
 
@@ -147,18 +150,24 @@ app.put('/api/movies/:id', (req, res) => {
 // Task: Implement logic to remove a movie by its index (ID)
 app.delete('/api/movies/:id', (req, res) => {
   // TODO: Add logic to remove a movie by its index
-  
-  // ***************************************************************
-  // ***************************************************************
-  // ***************  Implement your code here  ********************
-  // ***************************************************************
-  // ***************************************************************
+  const id = parseInt(req.params.id);
+  // Index Validation
+  if (isNaN(id) || id < 0 || id >= movies.length) {
+    return res.status(404).json({ error: 'Movie not found' });
+  }
+  const deletedMovie = movies[id];
+  // movies id delete
+  movies.splice(id, 1);
 
-  // Don't forget to remove the line below:
+  res.json({
+    message: 'Movie deleted',
+    movie: deletedMovie,
+    index: id
+  });
   res.status(501).send('Not Implemented');
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
